@@ -3,7 +3,7 @@
 int main()
 {
 	initscr();
-	addstr("Scrolls rule!");
+	addstr("Logbooks rule!");
 	getch();
 	endwin();
 	return 0;

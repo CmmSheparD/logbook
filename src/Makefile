@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -c -Wall -Wextra -Wpedantic
 LINK = -lncurses
-EXE = scrollkeeper
+EXE = logbook
 
 all: $(EXE)
 
