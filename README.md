@@ -1,3 +1,3 @@
 # logbook
 
-Dairy keeper with CUI using `ncurses`.
+Dairy keeper with CUI written in C using `ncurses`.
