@@ -11,17 +11,17 @@ int getLine(dstring_t *str, int len);
 int main()
 {
 	setlocale(LC_ALL, "en_US.utf-8");
-	Entry_t *e = createEntry();
+	Entry_t *e = e_createEntry();
 	wprintf(L"Enter title:\t");
 	getLine(e->title, 64);
 	wprintf(L"Enter text:\t");
 	getLine(e->text, 0);
 	char buf[e->title->size * 4];
-	wcstombs(buf, e->title->string, e->title->size * 4);
+	wcstombs(buf, e->title->raw_string, e->title->size * 4);
 	FILE *f = fopen(buf, "w");
-	fwprintf(f, L"Title: %ls\nText: %ls\n", e->title->string, e->text->string);
+	fwprintf(f, L"Title: %ls\nText: %ls\n", e->title->raw_string, e->text->raw_string);
 	fclose(f);
-	freeEntry(e);
+	e_freeEntry(e);
 	return 0;
 }
 

@@ -8,11 +8,12 @@
 #include <stdbool.h>
 #include <wchar.h>
 
-#define DSTRING_INIT 128
+#define DSTRING_INIT_SIZE 128
 
 typedef struct DString {
-	size_t size, max;
-	wchar_t *string;
+	size_t size;
+	size_t max;
+	wchar_t *raw_string;
 } dstring_t;
 
 dstring_t *ds_createString();
