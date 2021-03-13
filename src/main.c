@@ -11,7 +11,7 @@ int getLine(dstring_t *str, int len);
 int main()
 {
 	setlocale(LC_ALL, "en_US.utf-8");
-	entry_t *e = createEntry();
+	Entry_t *e = createEntry();
 	wprintf(L"Enter title:\t");
 	getLine(e->title, 64);
 	wprintf(L"Enter text:\t");

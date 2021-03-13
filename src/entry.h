@@ -9,10 +9,10 @@
 
 typedef struct Entry {
 	dstring_t *title, *text;
-} entry_t;
+} Entry_t;
 
-entry_t *createEntry();
+Entry_t *createEntry();
 
-void freeEntry(entry_t *e);
+void freeEntry(Entry_t *e);
 
 #endif	// ENTRY_H
