@@ -1,8 +1,8 @@
-#include <stdlib.h>
-
 #include "entry.h"
 
-Entry_t *createEntry()
+#include <stdlib.h>
+
+Entry_t *e_createEntry()
 {
 	Entry_t *e = malloc(sizeof(*e));
 	e->title = ds_createString();
@@ -10,7 +10,7 @@ Entry_t *createEntry()
 	return e;
 }
 
-void freeEntry(Entry_t *e)
+void e_freeEntry(Entry_t *e)
 {
 	ds_freeString(e->title);
 	ds_freeString(e->text);

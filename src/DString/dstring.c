@@ -1,12 +1,12 @@
-#include <stdlib.h>
-
 #include "dstring.h"
+
+#include <stdlib.h>
 
 int _ds_reallocInnerString(dstring_t *ds, size_t delta)
 {
 	if (!ds) return -1;
-	ds->max += delta == 0 ? DSTRING_INIT :
-		delta / DSTRING_INIT + !(delta % DSTRING_INIT == 0);
+	ds->max += delta == 0 ? DSTRING_INIT_SIZE :
+		delta / DSTRING_INIT_SIZE + !(delta % DSTRING_INIT_SIZE == 0);
 	ds->string = realloc(ds->string, ds->max * sizeof(*ds->string));
 	return 0;
 }
@@ -15,7 +15,7 @@ dstring_t *ds_createString()
 {
 	dstring_t *str = malloc(sizeof(*str));
 	str->size = 0;
-	str->max = DSTRING_INIT;
+	str->max = DSTRING_INIT_SIZE;
 	str->string = malloc(str->max * sizeof(*str->string));
 	str->string[0] = '\0';
 	return str;

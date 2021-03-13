@@ -11,7 +11,7 @@ int getLine(dstring_t *str, int len);
 int main()
 {
 	setlocale(LC_ALL, "en_US.utf-8");
-	Entry_t *e = createEntry();
+	Entry_t *e = e_createEntry();
 	wprintf(L"Enter title:\t");
 	getLine(e->title, 64);
 	wprintf(L"Enter text:\t");
@@ -21,7 +21,7 @@ int main()
 	FILE *f = fopen(buf, "w");
 	fwprintf(f, L"Title: %ls\nText: %ls\n", e->title->string, e->text->string);
 	fclose(f);
-	freeEntry(e);
+	e_freeEntry(e);
 	return 0;
 }
 

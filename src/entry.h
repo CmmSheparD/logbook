@@ -8,11 +8,12 @@
 #include "DString/dstring.h"
 
 typedef struct Entry {
-	dstring_t *title, *text;
+	dstring_t *title;
+	dstring_t *text;
 } Entry_t;
 
-Entry_t *createEntry();
+Entry_t *e_createEntry();
 
-void freeEntry(Entry_t *e);
+void e_freeEntry(Entry_t *e);
 
 #endif	// ENTRY_H
