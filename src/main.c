@@ -5,23 +5,34 @@
 
 #include "DString/dstring.h"
 #include "entry.h"
+#include "logbook.h"
 
 int getLine(dstring_t *str, int len);
 
 int main()
 {
 	setlocale(LC_ALL, "en_US.utf-8");
-	Entry_t *e = e_createEntry();
-	wprintf(L"Enter title:\t");
-	getLine(e->title, 64);
-	wprintf(L"Enter text:\t");
-	getLine(e->text, 0);
-	char buf[e->title->size * 4];
-	wcstombs(buf, e->title->raw_string, e->title->size * 4);
+	Logbook_t *lb = lb_createLogbook();
+	getLine(lb->title, 60);
+	while (!feof(stdin)) {
+		Entry_t *e = e_createEntry();
+		getLine(e->title, 60);
+		getLine(e->text, 256);
+		lb_appendEntry(lb, e);
+	}
+	char buf[lb->title->size * 4];
+	wcstombs(buf, lb->title->raw_string, lb->title->size * 4);
 	FILE *f = fopen(buf, "w");
-	fwprintf(f, L"Title: %ls\nText: %ls\n", e->title->raw_string, e->text->raw_string);
+	fwprintf(f, L"%ls", lb->title->raw_string);
+	int n = lb_countEntries(lb);
+	for (int i = 0; i < n; ++i) {
+		fputwc(L'\n', f);
+		Entry_t *e = lb_getEntry(lb, i);
+		fwprintf(f, L"%ls\n%ls", e->title->raw_string,
+			e->text->raw_string);
+	}
 	fclose(f);
-	e_freeEntry(e);
+	lb_freeLogbook(lb);
 	return 0;
 }
 
