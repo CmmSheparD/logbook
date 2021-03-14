@@ -61,3 +61,9 @@ int ds_appendString(dstring_t *ds, wchar_t *string)
 	wcscat(ds->raw_string, string);
 	return 0;
 }
+
+int ds_concatStrings(dstring_t *target, dstring_t *source)
+{
+	if (!target || !source) return -1;
+	return ds_appendString(target, source->raw_string);
+}

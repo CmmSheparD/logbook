@@ -26,4 +26,6 @@ int ds_appendChar(dstring_t *ds, wchar_t c);
 
 int ds_appendString(dstring_t *ds, wchar_t *string);
 
+int ds_concatStrings(dstring_t *target, dstring_t *source);
+
 #endif	//DSTRING_H
