@@ -5,10 +5,13 @@ EXE = logbook
 
 all: $(EXE)
 
-$(EXE): main.o logbook.o dstring.o entry.o
+$(EXE): main.o logbook.o dstring.o entry.o export.o
 	$(CC) -o $@ $^ $(LINK)
 
 main.o: main.c logbook.h entry.h DString/dstring.h
+	$(CC) $(CFLAGS) $<
+
+export.o: export.c export.h DString/dstring.h
 	$(CC) $(CFLAGS) $<
 
 logbook.o: logbook.c logbook.h entry.h DString/dstring.h
