@@ -46,4 +46,4 @@ Entry_t *lb_getEntry(const Logbook_t *lb, size_t ind);
 
 Entry_t *lb_getLastEntry(const Logbook_t *lb);
 
-#endif
+#endif	// LOGBOOK_H

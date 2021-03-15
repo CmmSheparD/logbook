@@ -6,8 +6,10 @@ int _ds_reallocInnerString(dstring_t *ds, size_t delta)
 {
 	if (!ds) return -1;
 	ds->max += delta == 0 ? DSTRING_INIT_SIZE :
-		delta / DSTRING_INIT_SIZE + !(delta % DSTRING_INIT_SIZE == 0);
-	ds->raw_string = realloc(ds->raw_string, ds->max * sizeof(*ds->raw_string));
+		(delta / DSTRING_INIT_SIZE + !(delta % DSTRING_INIT_SIZE == 0))
+		* DSTRING_INIT_SIZE;
+	ds->raw_string = realloc(ds->raw_string,
+		ds->max * sizeof(*ds->raw_string));
 	return 0;
 }
 
@@ -59,6 +61,7 @@ int ds_appendString(dstring_t *ds, wchar_t *string)
 		_ds_reallocInnerString(ds, len - avail);
 	}
 	wcscat(ds->raw_string, string);
+	ds->size += len;
 	return 0;
 }
 

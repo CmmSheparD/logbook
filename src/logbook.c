@@ -9,7 +9,8 @@ int _eda_reallocInnerArray(struct _Entry_DA *arr, size_t delta)
 {
 	if (!arr) return -1;
 	arr->max += delta == 0 ? EDA_INIT_SIZE :
-		delta / EDA_INIT_SIZE + !(delta % EDA_INIT_SIZE == 0);
+		(delta / EDA_INIT_SIZE + !(delta % EDA_INIT_SIZE == 0))
+		* EDA_INIT_SIZE;
 	arr->array = realloc(arr->array, arr->max * sizeof(*arr->array));
 	return 0;
 }
