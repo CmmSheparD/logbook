@@ -13,7 +13,6 @@ typedef struct Entry {
 } Entry_t;
 
 Entry_t *e_createEntry();
-
 void e_freeEntry(Entry_t *e);
 
 #endif	// ENTRY_H

@@ -55,6 +55,7 @@ int eda_appendEntry(struct _Entry_DA *arr, Entry_t *entry)
 	return 0;
 }
 
+
 Logbook_t *lb_createLogbook()
 {
 	Logbook_t *lb = malloc(sizeof(*lb));
@@ -93,13 +94,6 @@ int lb_appendEntry(const Logbook_t *lb, Entry_t *entry)
 {
 	if (!lb || !lb->entries || !entry) return -1;
 	eda_appendEntry(lb->entries, entry);
-	return 0;
-}
-
-int lb_createEntry(const Logbook_t *lb)
-{
-	if (!lb || !lb->entries) return -1;
-	eda_appendEntry(lb->entries, e_createEntry());
 	return 0;
 }
 

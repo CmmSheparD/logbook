@@ -25,25 +25,17 @@ typedef struct Logbook {
 } Logbook_t;
 
 Logbook_t *lb_createLogbook();
-
 void lb_freeLogbook(Logbook_t *lb);
 
 bool lb_isEmpty(const Logbook_t *lb);
-
 int lb_countEntries(const Logbook_t *lb);
 
 int lb_appendEntry(const Logbook_t *lb, Entry_t *entry);
 
 /*
- * Creates new entry and puts it in the end of array.
- */
-int lb_createEntry(const Logbook_t *lb);
-
-/*
  * Returns pointer that is ind-th in the array.
  */
 Entry_t *lb_getEntry(const Logbook_t *lb, size_t ind);
-
 Entry_t *lb_getLastEntry(const Logbook_t *lb);
 
 #endif	// LOGBOOK_H

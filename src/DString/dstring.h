@@ -17,13 +17,11 @@ typedef struct DString {
 } dstring_t;
 
 dstring_t *ds_createString();
-
 void ds_freeString(dstring_t *ds);
 
 bool ds_isEmpty(const dstring_t *ds);
 
 int ds_appendChar(dstring_t *ds, wchar_t c);
-
 int ds_appendString(dstring_t *ds, wchar_t *string);
 
 int ds_concatStrings(dstring_t *target, dstring_t *source);
