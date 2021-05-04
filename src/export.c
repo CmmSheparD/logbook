@@ -3,11 +3,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "log.c/src/log.h"
+
 #include "DString/dstring.h"
 
 int exportToText(const Logbook_t *lb)
 {
-	if (!lb || !lb->title || !lb->entries) return -1;
+	log_trace("Exporting logbook to text file.");
+	if (!lb || !lb->title || !lb->entries){
+		log_debug("Some of related to exported logbook pointers are NULL.");
+		return -1;
+	}
 
 	dstring_t *fname = ds_createString();
 	ds_concatStrings(fname, lb->title);
@@ -15,11 +21,12 @@ int exportToText(const Logbook_t *lb)
 	char *buf = malloc(fname->size * sizeof(*fname->raw_string));
 	wcstombs(buf, fname->raw_string,
 		fname->size * sizeof(*fname->raw_string));
-	FILE *file = fopen(buf, "w");
 	ds_freeString(fname);
-	fname = NULL;
+	log_debug("File name is \"%s\".", buf);
+
+	FILE *file = fopen(buf, "w");
+	log_debug("File opened successfully.");
 	free(buf);
-	buf = NULL;
 	
 	fwprintf(file, L"%ls\n", lb->title->raw_string);
 	int len = lb_countEntries(lb);
@@ -28,6 +35,8 @@ int exportToText(const Logbook_t *lb)
 		fwprintf(file, L"\n%ls\n\n%ls\n", e->title->raw_string,
 			e->text->raw_string);
 	}
+	log_debug("Finished exporting logbook to file.");
 	fclose(file);
+	log_trace("Successfully exported logbook to file.");
 	return 0;
 }

@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "log.c/src/log.h"
+
 #include "DString/dstring.h"
 #include "entry.h"
 #include "logbook.h"
@@ -13,6 +15,7 @@ int getLine(dstring_t *str, int len);
 int main()
 {
 	setlocale(LC_ALL, "en_US.utf-8");
+	log_set_level(LOG_TRACE);
 	Logbook_t *lb = lb_createLogbook();
 	getLine(lb->title, 60);
 	while (!feof(stdin)) {
