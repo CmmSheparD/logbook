@@ -18,9 +18,9 @@ int exportToText(const Logbook_t *lb)
 	dstring_t *fname = ds_createString();
 	ds_concatStrings(fname, lb->title);
 	ds_appendString(fname, L".txt");
-	char *buf = malloc(fname->size * sizeof(*fname->raw_string));
+	char *buf = malloc((fname->len + 1) * sizeof(*fname->raw_string));
 	wcstombs(buf, fname->raw_string,
-		fname->size * sizeof(*fname->raw_string));
+		(fname->len + 1) * sizeof(*fname->raw_string));
 	ds_freeString(fname);
 	log_debug("File name is \"%s\".", buf);
 

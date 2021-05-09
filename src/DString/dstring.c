@@ -16,7 +16,7 @@ int _ds_reallocInnerString(dstring_t *ds, size_t delta)
 dstring_t *ds_createString()
 {
 	dstring_t *str = malloc(sizeof(*str));
-	str->size = 0;
+	str->len = 0;
 	str->max = DSTRING_INIT_SIZE;
 	str->raw_string = malloc(str->max * sizeof(*str->raw_string));
 	str->raw_string[0] = '\0';
@@ -33,22 +33,27 @@ void ds_freeString(dstring_t *ds)
 
 bool ds_isEmpty(const dstring_t *ds)
 {
-	if (ds->size == 0)
+	if (ds->len == 0)
 		return true;
 	else
 		return false;
 }
 
+size_t ds_spaceAvalable(const dstring_t *ds)
+{
+	return ds->max - ds->len - 1;
+}
+
 int ds_appendChar(dstring_t *ds, wchar_t c)
 {
 	if (!ds || !ds->raw_string) return -1;
-	if (ds->size + 1 >= ds->max)
+	if (ds_spaceAvalable(ds) == 0)
 		_ds_reallocInnerString(ds, 0);
-	if (ds->size != 0)
-		--ds->size;
-	ds->raw_string[ds->size] = c;
-	ds->raw_string[ds->size + 1] = '\0';
-	ds->size += 2;
+	if (ds->len != 0)
+		--ds->len;
+	ds->raw_string[ds->len] = c;
+	ds->raw_string[ds->len + 1] = '\0';
+	ds->len += 2;
 	return 0;
 }
 
@@ -56,12 +61,12 @@ int ds_appendString(dstring_t *ds, wchar_t *string)
 {
 	if (!ds || !ds->raw_string || !string) return -1;
 	size_t len = wcslen(string);
-	size_t avail = ds->max - ds->size;
+	size_t avail = ds_spaceAvalable(ds);
 	if (avail < len) {
 		_ds_reallocInnerString(ds, len - avail);
 	}
 	wcscat(ds->raw_string, string);
-	ds->size += len;
+	ds->len += len;
 	return 0;
 }
 
