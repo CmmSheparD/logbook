@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -c -Wall -Wextra -Wpedantic -DLOG_USE_COLOR
-LINK = -lncurses
+LINK = -lncursesw
 EXE = logbook
 
 all: $(EXE)
