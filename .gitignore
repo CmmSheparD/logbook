@@ -2,4 +2,7 @@
 *.o
 *.exe
 *.out
+*.xml
+*.cfg
+*.ini
 logbook

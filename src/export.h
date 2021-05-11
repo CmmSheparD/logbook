@@ -14,10 +14,8 @@
  * <logbook title>
  * 
  * <entry #1 title>
- * 
  * <text>
  * <text>
- * 
  * <text>
  * 
  * <entry #2 title>
