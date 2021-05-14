@@ -44,6 +44,12 @@ size_t ds_spaceAvalable(const dstring_t *ds)
 	return ds->max - ds->len - 1;
 }
 
+size_t ds_multibyteLength(const dstring_t *ds)
+{
+	if (!ds || !ds->raw_string) return 0;
+	return wcstombs(NULL, ds->raw_string, 0) + 1;
+}
+
 int ds_appendChar(dstring_t *ds, wchar_t c)
 {
 	if (!ds || !ds->raw_string) return -1;
@@ -74,4 +80,10 @@ int ds_concatStrings(dstring_t *target, dstring_t *source)
 {
 	if (!target || !source) return -1;
 	return ds_appendString(target, source->raw_string);
+}
+
+size_t ds_convertToMultibyte(const dstring_t *ds, char *dest, size_t n)
+{
+	if (!ds || !ds->raw_string || !dest) return 0;
+	return wcstombs(dest, ds->raw_string, n);
 }
