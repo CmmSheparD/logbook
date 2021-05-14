@@ -14,14 +14,16 @@
  * <logbook title>
  * 
  * <entry #1 title>
- * 
  * <text>
  * <text>
- * 
  * <text>
  * 
  * <entry #2 title>
  * ...
+ */
+/*
+ * TODO: Make this function to take additional argument - file name. It must
+ * be provided, not generated.
  */
 int exportToText(const Logbook_t *lb);
 

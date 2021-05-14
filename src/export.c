@@ -32,7 +32,7 @@ int exportToText(const Logbook_t *lb)
 	int len = lb_countEntries(lb);
 	for (int i = 0; i < len; ++i) {
 		Entry_t *e = lb_getEntry(lb, i);
-		fwprintf(file, L"\n%ls\n\n%ls\n", e->title->raw_string,
+		fwprintf(file, L"\n%ls\n%ls\n", e->title->raw_string,
 			e->text->raw_string);
 	}
 	log_debug("Finished exporting logbook to file.");
