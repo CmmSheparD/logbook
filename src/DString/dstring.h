@@ -29,10 +29,17 @@ void ds_freeString(dstring_t *ds);
 
 bool ds_isEmpty(const dstring_t *ds);
 size_t ds_spaceAvalable(const dstring_t *ds);
+/*
+ * Get a size of a character string to store converted to multibyte
+ * dynamic string including a terminating null character.
+ */
+size_t ds_multibyteLength(const dstring_t *ds);
 
 int ds_appendChar(dstring_t *ds, wchar_t c);
 int ds_appendString(dstring_t *ds, wchar_t *string);
 
 int ds_concatStrings(dstring_t *target, dstring_t *source);
+
+size_t ds_convertToMultibyte(const dstring_t *ds, char *dest, size_t n);
 
 #endif	//DSTRING_H
