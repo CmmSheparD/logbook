@@ -24,7 +24,7 @@ int main()
 	while (!feof(stdin)) {
 		dstring_t *title = ds_createString();
 		getLine(title, 60);
-		if (title->len == 0) {
+		if (ds_isEmpty(title)) {
 			ds_freeString(title);
 			break;
 		}
@@ -42,24 +42,19 @@ int main()
 
 int getLine(dstring_t *str, int len)
 {
-	char buf[5];
-	buf[4] = '\0';
-	*(int *)buf = 0;
-	int j = 0;
-	for (int i = 0; i < len && ((buf[j] = getch()) != '\n');) {
-		if (buf[j] == '\n')
+	char c;
+	for (int i = 0; i < len && ((c = getch()) != '\n');) {
+		if (c == '\n')
 			break;
-		++j;
+		addnstr(&c, 1);
 		wchar_t	a;
-		if (mbtowc(&a, buf + j - 1, 1) != -1) {
+		if (mbtowc(&a, &c, 1) != -1) {
 			ds_appendChar(str, a);
-			addnstr(buf, j);
 			refresh();
-			j = 0;
-			*(int *)buf = 0;
 			++i;
 		}
 	}
 	addch('\n');
+	mbtowc(NULL, NULL, 0);
 	return 0;
 }

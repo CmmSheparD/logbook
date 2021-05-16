@@ -18,19 +18,18 @@ int exportToText(const Logbook_t *lb)
 	dstring_t *fname = ds_createString();
 	ds_concatStrings(fname, lb->title);
 	ds_appendString(fname, L".txt");
-	char *buf = malloc((fname->len + 1) * sizeof(*fname->raw_string));
-	wcstombs(buf, fname->raw_string,
-		(fname->len + 1) * sizeof(*fname->raw_string));
+	size_t len = ds_multibyteLength(fname);
+	char buf[len];
+	ds_convertToMultibyte(fname, buf, len);
 	ds_freeString(fname);
 	log_debug("File name is \"%s\".", buf);
 
 	FILE *file = fopen(buf, "w");
 	log_debug("File opened successfully.");
-	free(buf);
 	
 	fwprintf(file, L"%ls\n", lb->title->raw_string);
-	int len = lb_countEntries(lb);
-	for (int i = 0; i < len; ++i) {
+	int lblen = lb_countEntries(lb);
+	for (int i = 0; i < lblen; ++i) {
 		Entry_t *e = lb_getEntry(lb, i);
 		fwprintf(file, L"\n%ls\n%ls\n", e->title->raw_string,
 			e->text->raw_string);
