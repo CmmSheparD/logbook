@@ -34,7 +34,17 @@ int main()
 		getLine(e->text, 256);
 		lb_appendEntry(lb, e);
 	}
-	exportToText(lb);
+	dstring_t *fname = ds_createString();
+	ds_concatStrings(fname, lb->title);
+	ds_appendString(fname, L".txt");
+	size_t len = ds_multibyteLength(fname);
+
+	char buf[len];
+	ds_convertToMultibyte(fname, buf, len);
+	ds_freeString(fname);
+	log_debug("File name is \"%s\".", buf);
+
+	exportToText(lb, buf);
 	lb_freeLogbook(lb);
 	endwin();
 	return 0;
