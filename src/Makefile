@@ -1,6 +1,6 @@
 CC = gcc
 CFLAGS = -c -Wall -Wextra -Wpedantic -DLOG_USE_COLOR
-LINK = -lncursesw
+LINK = -lncursesw `xml2-config --libs`
 EXE = logbook
 
 all: $(EXE)
@@ -15,7 +15,7 @@ log.o: log.c/src/log.c log.c/src/log.h
 	$(CC) $(CFLAGS) $<
 
 export.o: export.c export.h DString/dstring.h log.c/src/log.h
-	$(CC) $(CFLAGS) $<
+	$(CC) $(CFLAGS) $< `xml2-config --cflags`
 
 logbook.o: logbook.c logbook.h entry.h DString/dstring.h
 	$(CC) $(CFLAGS) $<

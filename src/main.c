@@ -10,12 +10,14 @@
 #include "logbook.h"
 #include "export.h"
 
+void setupLog(int level, bool quiet);
+
 int getLine(dstring_t *str, int len);
 
 int main()
 {
 	setlocale(LC_ALL, "en_US.utf-8");
-	log_set_level(LOG_TRACE);
+	setupLog(LOG_TRACE, false);
 	initscr();
 	cbreak();
 	noecho();
@@ -36,7 +38,7 @@ int main()
 	}
 	dstring_t *fname = ds_createString();
 	ds_concatStrings(fname, lb->title);
-	ds_appendString(fname, L".txt");
+	ds_appendString(fname, L".xml");
 	size_t len = ds_multibyteLength(fname);
 
 	char buf[len];
@@ -44,7 +46,7 @@ int main()
 	ds_freeString(fname);
 	log_debug("File name is \"%s\".", buf);
 
-	exportToText(lb, buf);
+	exportToXML(lb, buf);
 	lb_freeLogbook(lb);
 	endwin();
 	return 0;
@@ -67,4 +69,10 @@ int getLine(dstring_t *str, int len)
 	addch('\n');
 	mbtowc(NULL, NULL, 0);
 	return 0;
+}
+
+void setupLog(int level, bool quiet)
+{
+	log_set_level(level);
+	log_set_quiet(quiet);
 }
