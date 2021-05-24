@@ -1,6 +1,5 @@
 #include "export.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 
 #include <libxml/tree.h>
@@ -9,7 +8,7 @@
 
 #include "DString/dstring.h"
 
-int exportToText(const Logbook_t *lb, char filename[])
+int exportToText(const Logbook_t *lb, const char filename[])
 {
 	log_trace("Exporting logbook to text file.");
 	if (!lb || !lb->title || !lb->entries) {
@@ -33,7 +32,7 @@ int exportToText(const Logbook_t *lb, char filename[])
 	return 0;
 }
 
-void appendEntryToXML(xmlDocPtr doc, Entry_t *entry)
+void appendEntryToXML(xmlDocPtr doc, const Entry_t *entry)
 {
 	xmlNodePtr e = xmlNewDocNode(
 		doc,
@@ -55,9 +54,11 @@ void appendEntryToXML(xmlDocPtr doc, Entry_t *entry)
 	xmlAddChild(root, e);
 }
 
-void exportToXML(const Logbook_t *lb, char filename[])
+int exportToXML(const Logbook_t *lb, const char filename[])
 {
 	log_trace("Exporting logbook to XML file.");
+	if (!lb || !lb->title || !lb->entries || !filename)
+		return -1;
 	xmlDocPtr doc = xmlNewDoc((const xmlChar *)"1.0");
 	xmlNodePtr root = xmlNewDocNode(
 		doc,
@@ -79,4 +80,5 @@ void exportToXML(const Logbook_t *lb, char filename[])
 	xmlSaveFileEnc(filename, doc, "utf-8");
 	xmlFreeDoc(doc);
 	log_trace("Successfully exported logbook to XML file.");
+	return 0;
 }
