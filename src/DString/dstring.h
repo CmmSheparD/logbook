@@ -27,8 +27,15 @@ typedef struct DString {
 dstring_t *ds_createString();
 void ds_freeString(dstring_t *ds);
 
+/*
+ * Ensure that every pointer is non-NULL, `len` is lesser than `max`,
+ * and the last valid charater is a null-terminator.
+ */
+bool ds_isValid(const dstring_t *ds);
+
 bool ds_isEmpty(const dstring_t *ds);
 size_t ds_spaceAvalable(const dstring_t *ds);
+size_t ds_reserve(dstring_t *ds, size_t least);
 /*
  * Get a size of a character string to store converted to multibyte
  * dynamic string including a terminating null character.
@@ -40,6 +47,6 @@ int ds_appendString(dstring_t *ds, wchar_t *string);
 
 int ds_concatStrings(dstring_t *target, dstring_t *source);
 
-size_t ds_convertToMultibyte(const dstring_t *ds, char *dest, size_t n);
+size_t ds_dumpToChars(const dstring_t *ds, char *dest, size_t n);
 
 #endif	//DSTRING_H

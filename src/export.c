@@ -41,12 +41,12 @@ void appendEntryToXML(xmlDocPtr doc, const Entry_t *entry)
 		NULL);
 	size_t dlen = ds_multibyteLength(entry->title);
 	char *str = malloc(dlen);
-	ds_convertToMultibyte(entry->title, str, dlen);
+	ds_dumpToChars(entry->title, str, dlen);
 	xmlNewProp(e, (const xmlChar *)"title", (const xmlChar *)str);
 
 	dlen = ds_multibyteLength(entry->text);
 	str = realloc(str, dlen);
-	ds_convertToMultibyte(entry->text, str, dlen);
+	ds_dumpToChars(entry->text, str, dlen);
 	xmlNodeAddContent(e, (const xmlChar *)str);
 	free(str);
 
@@ -70,7 +70,7 @@ int exportToXML(const Logbook_t *lb, const char filename[])
 	xmlNewProp(root, (const xmlChar *)"doc_version",
 		(const xmlChar *)"0.1");
 	char title[ds_multibyteLength(lb->title)];
-	ds_convertToMultibyte(lb->title, title, ds_multibyteLength(lb->title));
+	ds_dumpToChars(lb->title, title, ds_multibyteLength(lb->title));
 	xmlNewProp(root, (const xmlChar *)"title", (const xmlChar *)title);
 
 	for (int i = 0; i < lb_countEntries(lb); ++i) {
