@@ -42,7 +42,7 @@ int main()
 	size_t len = ds_multibyteLength(fname);
 
 	char buf[len];
-	ds_convertToMultibyte(fname, buf, len);
+	ds_dumpToChars(fname, buf, len);
 	ds_freeString(fname);
 	log_debug("File name is \"%s\".", buf);
 
