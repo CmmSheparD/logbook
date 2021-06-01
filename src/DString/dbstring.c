@@ -37,12 +37,19 @@ void dbs_freeString(dbstring_t *dbs)
 
 bool dbs_isValid(const dbstring_t *dbs)
 {
-	return (
+	bool valid = (
 		dbs
 		&& dbs->raw_string
 		&& dbs->len < dbs->max
 		&& dbs->raw_string[dbs->len] == '\0'
 	);
+	// log_debug("Checking dbstring_t [%p]:", dbs);
+	// log_debug("raw_string [%p]", dbs->raw_string);
+	// log_debug("len: %6lu", dbs->len);
+	// log_debug("max: %6lu", dbs->max);
+	// log_debug("last char: %hhx", dbs->raw_string[dbs->len]);
+	// log_debug("valid: %hhu.", dbs, valid);
+	return valid;
 }
 
 
@@ -51,7 +58,7 @@ bool dbs_isEmpty(const dbstring_t *dbs)
 	return dbs->len == 0;
 }
 
-size_t dbs_spaceAvalable(const dbstring_t *dbs)
+size_t dbs_spaceAvailable(const dbstring_t *dbs)
 {
 	if (!dbs_isValid(dbs))
 		return 0;
@@ -79,13 +86,10 @@ int dbs_appendChar(dbstring_t *dbs, char c)
 {
 	if (!dbs_isValid(dbs))
 		return -1;
-	if (dbs_spaceAvalable(dbs) == 0)
+	if (dbs_spaceAvailable(dbs) == 0)
 		_dbs_reallocInnerString(dbs, 0);
-	if (dbs->len != 0)
-		--dbs->len;
 	dbs->raw_string[dbs->len] = c;
-	dbs->raw_string[dbs->len + 1] = '\0';
-	dbs->len += 2;
+	dbs->raw_string[++dbs->len] = '\0';
 	return 0;
 }
 
@@ -93,12 +97,12 @@ int dbs_appendString(dbstring_t *dbs, char *string)
 {
 	if (!dbs_isValid(dbs) || !string)
 		return -1;
-	size_t len = wcslen(string);
-	size_t avail = dbs_spaceAvalable(dbs);
+	size_t len = strlen(string);
+	size_t avail = dbs_spaceAvailable(dbs);
 	if (avail < len) {
 		_dbs_reallocInnerString(dbs, len - avail);
 	}
-	wcscat(dbs->raw_string, string);
+	strcat(dbs->raw_string, string);
 	dbs->len += len;
 	return 0;
 }

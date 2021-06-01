@@ -31,7 +31,7 @@ void dbs_freeString(dbstring_t *dbs);
 bool dbs_isValid(const dbstring_t *dbs);
 
 bool dbs_isEmpty(const dbstring_t *dbs);
-size_t dbs_spaceAvalable(const dbstring_t *dbs);
+size_t dbs_spaceAvailable(const dbstring_t *dbs);
 size_t dbs_reserve(dbstring_t *dbs, size_t least);
 /*
  * Get a size of a wide character string to store converted to wide character

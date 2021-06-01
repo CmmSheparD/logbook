@@ -6,9 +6,10 @@ int dcv_convertToBytes(const dstring_t *src, dbstring_t *dest)
 {
 	if (!ds_isValid(src) || !dbs_isValid(dest))
 		return -1;
-	size_t dlen = ds_multibyteLength(src);
-	dbs_reserve(dest, dlen);
-	wcstombs(dest->raw_string, src->raw_string, dlen);
+	dest->len = ds_multibyteLength(src) - 1;
+	dbs_reserve(dest, dest->len);
+	wcstombs(dest->raw_string, src->raw_string, dest->len);
+	dest->raw_string[dest->len] = '\0';
 	return 0;
 }
 
@@ -16,7 +17,9 @@ int dcv_convertToWide(const dbstring_t *src, dstring_t *dest)
 {
 	if (!dbs_isValid(src) || !ds_isValid(dest))
 		return -1;
-	size_t dlen = dbs_wideLength(src);
-	ds_reserve(dest, dlen);
-	wcstombs(dest->raw_string, src->raw_string, dlen);
+	dest->len = dbs_wideLength(src) - 1;
+	ds_reserve(dest, dest->len);
+	mbstowcs(dest->raw_string, src->raw_string, dest->len);
+	dest->raw_string[dest->len] = L'\0';
+	return 0;
 }

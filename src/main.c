@@ -5,6 +5,8 @@
 #include "log.c/src/log.h"
 #include <ncurses.h>
 
+#include "DString/converters.h"
+#include "DString/dbstring.h"
 #include "DString/dstring.h"
 #include "entry.h"
 #include "logbook.h"
@@ -36,17 +38,15 @@ int main()
 		getLine(e->text, 256);
 		lb_appendEntry(lb, e);
 	}
-	dstring_t *fname = ds_createString();
-	ds_concatStrings(fname, lb->title);
-	ds_appendString(fname, L".xml");
-	size_t len = ds_multibyteLength(fname);
+	dbstring_t *fname = dbs_createString();
+	dcv_convertToBytes(lb->title, fname);
+	dbs_appendString(fname, ".xml");
 
-	char buf[len];
-	ds_dumpToChars(fname, buf, len);
-	ds_freeString(fname);
-	log_debug("File name is \"%s\".", buf);
+	log_debug("File name is \"%s\".", fname->raw_string);
 
-	exportToXML(lb, buf);
+	exportToXML(lb, fname->raw_string);
+	dbs_freeString(fname);
+
 	lb_freeLogbook(lb);
 	endwin();
 	return 0;
