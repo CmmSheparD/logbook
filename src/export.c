@@ -6,6 +6,8 @@
 
 #include "log.c/src/log.h"
 
+#include "DString/converters.h"
+#include "DString/dbstring.h"
 #include "DString/dstring.h"
 
 int exportToText(const Logbook_t *lb, const char filename[])
@@ -39,16 +41,14 @@ void appendEntryToXML(xmlDocPtr doc, const Entry_t *entry)
 		NULL,
 		(const xmlChar *)"Entry",
 		NULL);
-	size_t dlen = ds_multibyteLength(entry->title);
-	char *str = malloc(dlen);
-	ds_dumpToChars(entry->title, str, dlen);
-	xmlNewProp(e, (const xmlChar *)"title", (const xmlChar *)str);
+	dbstring_t *str = dbs_createString();
+	dcv_convertToBytes(entry->title, str);
+	xmlNewProp(e, (const xmlChar *)"title",
+		(const xmlChar *)str->raw_string);
 
-	dlen = ds_multibyteLength(entry->text);
-	str = realloc(str, dlen);
-	ds_dumpToChars(entry->text, str, dlen);
-	xmlNodeAddContent(e, (const xmlChar *)str);
-	free(str);
+	dcv_convertToBytes(entry->text, str);
+	xmlNodeAddContent(e, (const xmlChar *)str->raw_string);
+	dbs_freeString(str);
 
 	xmlNodePtr root = xmlDocGetRootElement(doc);
 	xmlAddChild(root, e);
@@ -66,18 +66,24 @@ int exportToXML(const Logbook_t *lb, const char filename[])
 		(const xmlChar *)"Logbook",
 		NULL);
 	xmlDocSetRootElement(doc, root);
-
 	xmlNewProp(root, (const xmlChar *)"doc_version",
 		(const xmlChar *)"0.1");
-	char title[ds_multibyteLength(lb->title)];
-	ds_dumpToChars(lb->title, title, ds_multibyteLength(lb->title));
-	xmlNewProp(root, (const xmlChar *)"title", (const xmlChar *)title);
+
+	log_debug("Putting title into xml.");
+	dbstring_t *title = dbs_createString();
+	dcv_convertToBytes(lb->title, title);
+	xmlNewProp(root, (const xmlChar *)"title",
+		(const xmlChar *)title->raw_string);
+	log_debug("A property \"%s\"was set.", title->raw_string);
+	dbs_freeString(title);
 
 	for (int i = 0; i < lb_countEntries(lb); ++i) {
 		appendEntryToXML(doc, lb_getEntry(lb, i));
 	}
-
+	log_debug("Saving file.");
 	xmlSaveFileEnc(filename, doc, "utf-8");
+	log_debug("File saved.");
+
 	xmlFreeDoc(doc);
 	log_trace("Successfully exported logbook to XML file.");
 	return 0;
