@@ -5,7 +5,7 @@ EXE = logbook
 
 all: $(EXE)
 
-$(EXE): main.o logbook.o dstring.o dbstring.o converters.o entry.o export.o log.o
+$(EXE): main.o logbook.o dstring.o dbstring.o converters.o entry.o export.o import.o log.o
 	$(CC) -o $@ $^ $(LINK)
 
 main.o: main.c logbook.h entry.h DString/dstring.h DString/dbstring.h DString/converters.h log.c/src/log.h
@@ -15,6 +15,9 @@ log.o: log.c/src/log.c log.c/src/log.h
 	$(CC) $(CFLAGS) $<
 
 export.o: export.c export.h DString/dstring.h log.c/src/log.h
+	$(CC) $(CFLAGS) $< `xml2-config --cflags`
+
+import.o: import.c import.h DString/converters.h entry.h log.c/src/log.h
 	$(CC) $(CFLAGS) $< `xml2-config --cflags`
 
 logbook.o: logbook.c logbook.h entry.h DString/dstring.h

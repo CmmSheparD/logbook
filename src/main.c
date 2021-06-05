@@ -9,8 +9,9 @@
 #include "DString/dbstring.h"
 #include "DString/dstring.h"
 #include "entry.h"
-#include "logbook.h"
 #include "export.h"
+#include "import.h"
+#include "logbook.h"
 
 void setupLog(int level, bool quiet);
 
@@ -25,6 +26,8 @@ int main()
 	noecho();
 	Logbook_t *lb = lb_createLogbook();
 	getLine(lb->title, 60);
+	dbstring_t *title = dbs_createString();
+	dcv_convertToBytes(lb->title, title);
 	while (!feof(stdin)) {
 		dstring_t *title = ds_createString();
 		getLine(title, 60);
@@ -48,6 +51,32 @@ int main()
 	dbs_freeString(fname);
 
 	lb_freeLogbook(lb);
+
+	lb = lb_createLogbook();
+	dbs_appendString(title, ".xml");
+	importLogbookXML(title->raw_string, &lb);
+	dbs_freeString(title);
+
+	dbstring_t *text = dbs_createString();
+	dcv_convertToBytes(lb->title, text);
+	dbs_appendString(text, ":");
+	for (size_t i = 0; i < lb->entries->size; ++i) {
+		dbs_appendChar(text, '\n');
+		dbstring_t *buf = dbs_createString();
+		dcv_convertToBytes(lb->entries->array[i]->title, buf);
+		dbs_appendString(buf, ":\n\"");
+		dbs_concatStrings(text, buf);
+		buf->len = 0;
+		buf->raw_string[0] = '\0';
+		dcv_convertToBytes(lb->entries->array[i]->text, buf);
+		dbs_appendString(buf, "\"\n");
+		dbs_concatStrings(text, buf);
+		dbs_freeString(buf);
+	}
+	lb_freeLogbook(lb);
+	addstr(text->raw_string);
+	dbs_freeString(text);
+	getch();
 	endwin();
 	return 0;
 }

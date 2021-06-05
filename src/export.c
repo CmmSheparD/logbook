@@ -74,7 +74,7 @@ int exportToXML(const Logbook_t *lb, const char filename[])
 	dcv_convertToBytes(lb->title, title);
 	xmlNewProp(root, (const xmlChar *)"title",
 		(const xmlChar *)title->raw_string);
-	log_debug("A property \"%s\"was set.", title->raw_string);
+	log_debug("The \"title\" was set to \"%s\".", title->raw_string);
 	dbs_freeString(title);
 
 	for (int i = 0; i < lb_countEntries(lb); ++i) {
