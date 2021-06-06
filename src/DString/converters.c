@@ -2,6 +2,10 @@
 
 #include <stdlib.h>
 
+size_t dbs_reserve(dbstring_t *dbs, size_t least);
+size_t ds_reserve(dstring_t *ds, size_t least);
+
+
 int dcv_convertToBytes(const dstring_t *src, dbstring_t *dest)
 {
 	if (!ds_isValid(src) || !dbs_isValid(dest))

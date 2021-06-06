@@ -35,7 +35,6 @@ bool ds_isValid(const dstring_t *ds);
 
 bool ds_isEmpty(const dstring_t *ds);
 size_t ds_spaceAvailable(const dstring_t *ds);
-size_t ds_reserve(dstring_t *ds, size_t least);
 /*
  * Get a size of a character string to store converted to multibyte
  * dynamic string including a terminating null character.
