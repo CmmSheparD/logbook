@@ -78,7 +78,7 @@ size_t dbs_wideLength(const dbstring_t *dbs)
 {
 	if (!dbs_isValid(dbs))
 		return 0;
-	return mbstowcs(NULL, dbs->raw_string, 0);
+	return mbstowcs(NULL, dbs->raw_string, 0) + 1;
 }
 
 
