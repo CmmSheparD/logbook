@@ -5,11 +5,11 @@
 #ifndef ENTRY_H
 #define ENTRY_H
 
-#include "DString/dstring.h"
+#include "dstring/wides.h"
 
 typedef struct Entry {
-	dstring_t *title;
-	dstring_t *text;
+	wide_str_t *title;
+	wide_str_t *text;
 } Entry_t;
 
 Entry_t *e_createEntry();

@@ -59,9 +59,8 @@ int eda_appendEntry(struct _Entry_DA *arr, Entry_t *entry)
 Logbook_t *lb_createLogbook()
 {
 	Logbook_t *lb = malloc(sizeof(*lb));
-	lb->title = ds_createString();
+	lb->title = wide_create();
 	lb->entries = eda_createArray();
-	*lb = (Logbook_t){ds_createString(), eda_createArray()};
 	return lb;
 }
 
@@ -69,7 +68,7 @@ void lb_freeLogbook(Logbook_t *lb)
 {
 	if (lb) {
 		if (lb->title)
-			ds_freeString(lb->title);
+			wide_free(lb->title);
 		if (lb->entries)
 			eda_freeArray(lb->entries);
 		free(lb);

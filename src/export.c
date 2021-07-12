@@ -6,9 +6,8 @@
 
 #include "log.c/src/log.h"
 
-#include "DString/converters.h"
-#include "DString/dbstring.h"
-#include "DString/dstring.h"
+#include "dstring/bytes.h"
+#include "dstring/convert.h"
 
 int exportToText(const Logbook_t *lb, const char filename[])
 {
@@ -21,18 +20,19 @@ int exportToText(const Logbook_t *lb, const char filename[])
 	FILE *file = fopen(filename, "w");
 	log_debug("File opened successfully.");
 	
-	fwprintf(file, L"%ls\n", lb->title->raw_string);
+	fwprintf(file, L"%ls\n", lb->title->string);
 	int lblen = lb_countEntries(lb);
 	for (int i = 0; i < lblen; ++i) {
 		Entry_t *e = lb_getEntry(lb, i);
-		fwprintf(file, L"\n%ls\n%ls\n", e->title->raw_string,
-			e->text->raw_string);
+		fwprintf(file, L"\n%ls\n%ls\n", e->title->string,
+			e->text->string);
 	}
 	log_debug("Finished exporting logbook to file.");
 	fclose(file);
 	log_trace("Successfully exported logbook to file.");
 	return 0;
 }
+
 
 void appendEntryToXML(xmlDocPtr doc, const Entry_t *entry)
 {
@@ -41,14 +41,14 @@ void appendEntryToXML(xmlDocPtr doc, const Entry_t *entry)
 		NULL,
 		(const xmlChar *)"Entry",
 		NULL);
-	dbstring_t *str = dbs_createString();
-	dcv_convertToBytes(entry->title, str);
+	byte_str_t *str = byte_create();
+	wide_toByteStr(entry->title, str);
 	xmlNewProp(e, (const xmlChar *)"title",
-		(const xmlChar *)str->raw_string);
+		(const xmlChar *)str->string);
 
-	dcv_convertToBytes(entry->text, str);
-	xmlNodeAddContent(e, (const xmlChar *)str->raw_string);
-	dbs_freeString(str);
+	wide_toByteStr(entry->text, str);
+	xmlNodeAddContent(e, (const xmlChar *)str->string);
+	byte_free(str);
 
 	xmlNodePtr root = xmlDocGetRootElement(doc);
 	xmlAddChild(root, e);
@@ -70,12 +70,12 @@ int exportToXML(const Logbook_t *lb, const char filename[])
 		(const xmlChar *)"0.1");
 
 	log_debug("Putting title into xml.");
-	dbstring_t *title = dbs_createString();
-	dcv_convertToBytes(lb->title, title);
+	byte_str_t *title = byte_create();
+	wide_toByteStr(lb->title, title);
 	xmlNewProp(root, (const xmlChar *)"title",
-		(const xmlChar *)title->raw_string);
-	log_debug("The \"title\" was set to \"%s\".", title->raw_string);
-	dbs_freeString(title);
+		(const xmlChar *)title->string);
+	log_debug("The \"title\" was set to \"%s\".", title->string);
+	byte_free(title);
 
 	for (int i = 0; i < lb_countEntries(lb); ++i) {
 		appendEntryToXML(doc, lb_getEntry(lb, i));

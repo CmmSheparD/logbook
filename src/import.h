@@ -5,7 +5,6 @@
 #ifndef IMPORT_H
 #define IMPORT_H
 
-#include "DString/dstring.h"
 #include "logbook.h"
 
 typedef enum LogbookImportError {
@@ -14,6 +13,6 @@ typedef enum LogbookImportError {
 	LIE_DOCUMENT_FORMAT_ERROR
 } LogbookImportError_t;
 
-enum LogbookImportError importLogbookXML(const char filename[], Logbook_t **lb);
+LogbookImportError_t importLogbookXML(const char filename[], Logbook_t **lb);
 
 #endif	// IMPORT_H

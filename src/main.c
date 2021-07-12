@@ -2,12 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "log.c/src/log.h"
 #include <ncurses.h>
+#include "log.c/src/log.h"
 
-#include "DString/converters.h"
-#include "DString/dbstring.h"
-#include "DString/dstring.h"
+#include "dstring/convert.h"
+#include "dstring/bytes.h"
+#include "dstring/wides.h"
 #include "entry.h"
 #include "export.h"
 #include "import.h"
@@ -15,7 +15,7 @@
 
 void setupLog(int level, bool quiet);
 
-int getLine(dstring_t *str, int len);
+int getLine(wide_str_t *str, int len);
 
 int main()
 {
@@ -26,62 +26,62 @@ int main()
 	noecho();
 	Logbook_t *lb = lb_createLogbook();
 	getLine(lb->title, 60);
-	dbstring_t *title = dbs_createString();
-	dcv_convertToBytes(lb->title, title);
 	while (!feof(stdin)) {
-		dstring_t *title = ds_createString();
+		wide_str_t *title = wide_create();
 		getLine(title, 60);
-		if (ds_isEmpty(title)) {
-			ds_freeString(title);
+		if (wide_isEmpty(title)) {
+			wide_free(title);
 			break;
 		}
 		Entry_t *e = e_createEntry();
-		ds_concatStrings(e->title, title);
-		ds_freeString(title);
+		wide_appendStr(e->title, title);
+		wide_create(title);
 		getLine(e->text, 256);
 		lb_appendEntry(lb, e);
 	}
-	dbstring_t *fname = dbs_createString();
-	dcv_convertToBytes(lb->title, fname);
-	dbs_appendString(fname, ".xml");
+	byte_str_t *fname = byte_create();
+	wide_toByteStr(lb->title, fname);
+	byte_appendRaw(fname, ".xml");
 
-	log_debug("File name is \"%s\".", fname->raw_string);
+	log_debug("File name is \"%s\".", fname->string);
 
-	exportToXML(lb, fname->raw_string);
-	dbs_freeString(fname);
+	exportToXML(lb, fname->string);
+	byte_free(fname);
 
+	byte_str_t *title = byte_create();
+	wide_toByteStr(lb->title, title);
 	lb_freeLogbook(lb);
 
 	lb = lb_createLogbook();
-	dbs_appendString(title, ".xml");
-	importLogbookXML(title->raw_string, &lb);
-	dbs_freeString(title);
+	byte_appendRaw(title, ".xml");
+	importLogbookXML(title->string, &lb);
+	byte_free(title);
 
-	dbstring_t *text = dbs_createString();
-	dcv_convertToBytes(lb->title, text);
-	dbs_appendString(text, ":");
+	byte_str_t *text = byte_create();
+	wide_toByteStr(lb->title, text);
+	byte_appendRaw(text, ":");
 	for (size_t i = 0; i < lb->entries->size; ++i) {
-		dbs_appendChar(text, '\n');
-		dbstring_t *buf = dbs_createString();
-		dcv_convertToBytes(lb->entries->array[i]->title, buf);
-		dbs_appendString(buf, ":\n\"");
-		dbs_concatStrings(text, buf);
+		byte_appendChar(text, '\n');
+		byte_str_t *buf = byte_create();
+		wide_toByteStr(lb->entries->array[i]->title, buf);
+		byte_appendRaw(buf, ":\n\"");
+		byte_appendStr(text, buf);
 		buf->len = 0;
-		buf->raw_string[0] = '\0';
-		dcv_convertToBytes(lb->entries->array[i]->text, buf);
-		dbs_appendString(buf, "\"\n");
-		dbs_concatStrings(text, buf);
-		dbs_freeString(buf);
+		buf->string[0] = '\0';
+		wide_toByteStr(lb->entries->array[i]->text, buf);
+		byte_appendRaw(buf, "\"\n");
+		byte_appendStr(text, buf);
+		byte_free(buf);
 	}
 	lb_freeLogbook(lb);
-	addstr(text->raw_string);
-	dbs_freeString(text);
+	addstr(text->string);
+	byte_free(text);
 	getch();
 	endwin();
 	return 0;
 }
 
-int getLine(dstring_t *str, int len)
+int getLine(wide_str_t *str, int len)
 {
 	char c;
 	for (int i = 0; i < len && ((c = getch()) != '\n');) {
@@ -90,7 +90,7 @@ int getLine(dstring_t *str, int len)
 		addnstr(&c, 1);
 		wchar_t	a;
 		if (mbtowc(&a, &c, 1) != -1) {
-			ds_appendChar(str, a);
+			wide_appendChar(str, a);
 			refresh();
 			++i;
 		}

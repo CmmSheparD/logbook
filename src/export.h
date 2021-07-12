@@ -21,7 +21,7 @@
  * <entry #2 title>
  * ...
  */
-int exportToText(const Logbook_t *lb, const char *filename);
+int exportToText(const Logbook_t *lb, const char filename[]);
 
 int exportToXML(const Logbook_t *lb, const char filename[]);
 

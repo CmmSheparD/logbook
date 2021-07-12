@@ -1,38 +1,38 @@
 CC = gcc
 CFLAGS = -c -Wall -Wextra -Wpedantic -DLOG_USE_COLOR
-LINK = -lncursesw `xml2-config --libs`
+LINK = -lm -lncursesw `xml2-config --libs`
 EXE = logbook
 
 all: $(EXE)
 
-$(EXE): main.o logbook.o dstring.o dbstring.o converters.o entry.o export.o import.o log.o
+$(EXE): main.o logbook.o wides.o bytes.o convert.o entry.o export.o import.o log.o
 	$(CC) -o $@ $^ $(LINK)
 
-main.o: main.c logbook.h entry.h DString/dstring.h DString/dbstring.h DString/converters.h log.c/src/log.h
+main.o: main.c logbook.h entry.h dstring/wides.h dstring/bytes.h dstring/convert.h log.c/src/log.h
 	$(CC) $(CFLAGS) $<
 
 log.o: log.c/src/log.c log.c/src/log.h
 	$(CC) $(CFLAGS) $<
 
-export.o: export.c export.h DString/dstring.h log.c/src/log.h
+export.o: export.c export.h dstring/wides.h log.c/src/log.h
 	$(CC) $(CFLAGS) $< `xml2-config --cflags`
 
-import.o: import.c import.h DString/converters.h entry.h log.c/src/log.h
+import.o: import.c import.h dstring/convert.h entry.h log.c/src/log.h
 	$(CC) $(CFLAGS) $< `xml2-config --cflags`
 
-logbook.o: logbook.c logbook.h entry.h DString/dstring.h
+logbook.o: logbook.c logbook.h entry.h dstring/wides.h
 	$(CC) $(CFLAGS) $<
 
-entry.o: entry.c entry.h DString/dstring.h
+entry.o: entry.c entry.h dstring/wides.h
 	$(CC) $(CFLAGS) $<
 
-dstring.o: DString/dstring.c DString/dstring.h
+wides.o: dstring/wides.c dstring/wides.h
 	$(CC) $(CFLAGS) $<
 
-dbstring.o: DString/dbstring.c DString/dbstring.h
+bytes.o: dstring/bytes.c dstring/bytes.h
 	$(CC) $(CFLAGS) $<
 
-converters.o: DString/converters.c DString/converters.h
+convert.o: dstring/convert.c dstring/convert.h
 	$(CC) $(CFLAGS) $<
 
 clean:

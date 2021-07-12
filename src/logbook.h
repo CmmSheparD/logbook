@@ -7,21 +7,21 @@
 
 #include <stdbool.h>
 
-#include "DString/dstring.h"
+#include "dstring/wides.h"
 #include "entry.h"
 
 /*
  * Dynamic array of pointers to logbook entries.
  */
 struct _Entry_DA {
+	Entry_t **array;
 	size_t size;
 	size_t max;
-	Entry_t **array;
 };
 
 typedef struct Logbook {
-	dstring_t *title;
 	struct _Entry_DA *entries;
+	wide_str_t *title;
 } Logbook_t;
 
 Logbook_t *lb_createLogbook();
